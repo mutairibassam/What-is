@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">WhatIs</string>
+    <string name="app_name">What is?</string>
+    <string name="what_is">What is … ?</string>
+    <string name="what_is2">What is</string>
+    <string name="example">Ex: SDK, Layout, Manifests</string>
+    <string name="search">Search</string>
 </resources>

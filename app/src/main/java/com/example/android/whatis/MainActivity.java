@@ -39,13 +39,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         userInput = findViewById(R.id.et_whatis);
-        searchResult = findViewById(R.id.tv_answer);
+//        searchResult = findViewById(R.id.tv_answer);
         btnSearch = findViewById(R.id.btn_search);
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                storedUserInput = userInput.getText().toString();
+                storedUserInput = userInput.getText().toString().toLowerCase().trim();
 
                 firebaseFirestore.collection("keywords")
                         .get()
@@ -54,10 +54,10 @@ public class MainActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if(task.isSuccessful()) {
                                     for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                        Log.d(TAG, "onComplete: " + documentSnapshot.getId() + " " + documentSnapshot.getData());
                                         String value = documentSnapshot.getId();
                                         if(value.equals(storedUserInput)) {
-                                            searchResult.setText(documentSnapshot.getData().toString());
+                                            String reformatted = documentSnapshot.getData().toString();
+                                            searchResult.setText(reformatted);
                                             return;
                                         } else {
                                             Toast.makeText(getApplicationContext(), "Not found", Toast.LENGTH_LONG).show();
