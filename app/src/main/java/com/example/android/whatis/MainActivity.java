@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,50 +25,37 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private EditText userInput;
-    private TextView searchResult;
-    private Button btnSearch;
+    private EditText mUserInput;
+    private Button mBtnSearch;
 
-    private String storedUserInput;
-
-    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-
+    private String mStoredString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        userInput = findViewById(R.id.et_whatis);
-//        searchResult = findViewById(R.id.tv_answer);
-        btnSearch = findViewById(R.id.btn_search);
+        mUserInput = findViewById(R.id.et_whatis);
+        mBtnSearch = findViewById(R.id.btn_search);
 
-        btnSearch.setOnClickListener(new View.OnClickListener() {
+        mBtnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                storedUserInput = userInput.getText().toString().toLowerCase().trim();
 
-                firebaseFirestore.collection("keywords")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if(task.isSuccessful()) {
-                                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                        String value = documentSnapshot.getId();
-                                        if(value.equals(storedUserInput)) {
-                                            String reformatted = documentSnapshot.getData().toString();
-                                            searchResult.setText(reformatted);
-                                            return;
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), "Not found", Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                } else {
-                                    Log.w(TAG, "Error getting documents", task.getException() );
-                                }
-                            }
-                        });
+                mStoredString = mUserInput.getText().toString().toLowerCase().trim();
+
+                if(TextUtils.isEmpty(mStoredString)) {
+                    Toast.makeText(MainActivity.this, "Please type something", Toast.LENGTH_SHORT).show();
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("key", mStoredString);
+                    Log.d(TAG, "onComplete: " + mStoredString);
+                    ResultActivity resultActivity = new ResultActivity();
+                    resultActivity.setArguments(bundle);
+                    resultActivity.show(getSupportFragmentManager(), "identifier");
+
+                }
+
             }
         });
 

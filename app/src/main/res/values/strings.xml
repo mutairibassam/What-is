@@ -4,4 +4,9 @@
     <string name="what_is2">What is</string>
     <string name="example">Ex: SDK, Layout, Manifests</string>
     <string name="search">Search</string>
+    <string name="back">Back</string>
+    <string name="Notifyme">Notify me</string>
+    <string name="notInterested">Not interested</string>
+
+
 </resources>
